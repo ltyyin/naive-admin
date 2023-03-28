@@ -29,7 +29,7 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean, prodMock) 
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
   // vite-plugin-mock
-  VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild, prodMock))
+  // VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild, prodMock))
 
   if (isBuild) {
     // rollup-plugin-gzip

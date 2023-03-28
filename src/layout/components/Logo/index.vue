@@ -1,26 +1,15 @@
+<script setup lang="ts">
+import { websiteConfig } from '@/config/website.config'
+
+defineProps<{ collapsed: boolean }>()
+</script>
+
 <template>
   <div class="logo">
     <img :src="websiteConfig.logo" alt="" />
     <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2>
   </div>
 </template>
-
-<script lang="ts">
-import { websiteConfig } from '@/config/website.config'
-export default {
-  name: 'Index',
-  props: {
-    collapsed: {
-      type: Boolean,
-    },
-  },
-  data() {
-    return {
-      websiteConfig,
-    }
-  },
-}
-</script>
 
 <style lang="less" scoped>
 .logo {

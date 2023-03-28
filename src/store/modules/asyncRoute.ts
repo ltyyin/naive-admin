@@ -84,15 +84,20 @@ export const useAsyncRouteStore = defineStore({
     },
     async generateRoutes(data) {
       let accessedRouters
+
       const permissionsList = data.permissions || []
+
       const routeFilter = route => {
         const { meta } = route
         const { permissions } = meta || {}
         if (!permissions) return true
         return permissionsList.some(item => permissions.includes(item.value))
       }
+
       const { getPermissionMode } = useProjectSetting()
+
       const permissionMode = unref(getPermissionMode)
+
       if (permissionMode === 'BACK') {
         // 动态获取菜单
         try {
@@ -108,9 +113,13 @@ export const useAsyncRouteStore = defineStore({
           console.log(error)
         }
       }
+
       accessedRouters = accessedRouters.filter(routeFilter)
+
       this.setRouters(accessedRouters)
+
       this.setMenus(accessedRouters)
+      
       return toRaw(accessedRouters)
     },
   },

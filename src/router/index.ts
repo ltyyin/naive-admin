@@ -1,6 +1,6 @@
 import { App } from 'vue'
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-// import { RedirectRoute } from '@/router/base'
+import { RedirectRoute } from '@/router/base'
 import { PageEnum } from '@/enums/pageEnum'
 import { createRouterGuards } from './router-guards'
 
@@ -26,6 +26,7 @@ export const RootRoute: RouteRecordRaw = {
   redirect: PageEnum.BASE_HOME,
   meta: {
     title: 'Root',
+    ignoreAuth: true,
   },
 }
 
@@ -42,7 +43,7 @@ export const LoginRoute: RouteRecordRaw = {
 export const asyncRoutes = [...routeModuleList]
 
 //普通路由 无需验证权限
-export const constantRouter: any[] = [LoginRoute, RootRoute]
+export const constantRouter: any[] = [LoginRoute, RootRoute, RedirectRoute]
 
 const router = createRouter({
   history: createWebHashHistory(''),
@@ -53,6 +54,7 @@ const router = createRouter({
 
 export function setupRouter(app: App) {
   app.use(router)
+  
   // 创建路由守卫
   createRouterGuards(router)
 }

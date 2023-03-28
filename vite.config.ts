@@ -28,7 +28,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   const prodMock = VITE_GLOB_PROD_MOCK
 
   const isBuild = command === 'build'
-  
+
   return {
     base: VITE_PUBLIC_PATH,
     esbuild: {},
@@ -45,7 +45,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       ],
       dedupe: ['vue'],
     },
-    // plugins: createVitePlugins(viteEnv, isBuild, prodMock),
+    plugins: createVitePlugins(viteEnv, isBuild, prodMock),
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
@@ -58,11 +58,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         },
       },
     },
-    // server: {
-    //   host: true,
-    //   port: VITE_PORT,
-    //   proxy: createProxy(VITE_PROXY),
-    // },
+    server: {
+      host: true,
+      port: VITE_PORT,
+      // proxy: createProxy(VITE_PROXY),
+    },
     optimizeDeps: {
       include: [],
       exclude: ['vue-demi'],

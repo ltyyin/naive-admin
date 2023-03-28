@@ -14,9 +14,11 @@ const whitePathList = [LOGIN_PATH] // no redirect whitelist
 export function createRouterGuards(router: Router) {
   const userStore = useUserStoreWidthOut()
   const asyncRouteStore = useAsyncRouteStoreWidthOut()
+
   router.beforeEach(async (to, from, next) => {
     const Loading = window['$loading'] || null
     Loading && Loading.start()
+
     if (from.path === LOGIN_PATH && to.name === 'errorPage') {
       next(PageEnum.BASE_HOME)
       return
@@ -30,6 +32,8 @@ export function createRouterGuards(router: Router) {
 
     const token = storage.get(ACCESS_TOKEN)
 
+    console.log(to)
+
     if (!token) {
       // You can access without permissions. You need to set the routing meta.ignoreAuth to true
       if (to.meta.ignoreAuth) {
@@ -41,12 +45,14 @@ export function createRouterGuards(router: Router) {
         path: LOGIN_PATH,
         replace: true,
       }
+      
       if (to.path) {
         redirectData.query = {
           ...redirectData.query,
           redirect: to.path,
         }
       }
+
       next(redirectData)
       return
     }
@@ -73,32 +79,40 @@ export function createRouterGuards(router: Router) {
 
     const redirectPath = (from.query.redirect || to.path) as string
     const redirect = decodeURIComponent(redirectPath)
+
     const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
+
     asyncRouteStore.setDynamicAddedRoute(true)
+
     next(nextData)
     Loading && Loading.finish()
   })
 
   router.afterEach((to, _, failure) => {
     document.title = (to?.meta?.title as string) || document.title
-    if (isNavigationFailure(failure)) {
-      //console.log('failed navigation', failure)
-    }
-    const asyncRouteStore = useAsyncRouteStoreWidthOut()
-    // 在这里设置需要缓存的组件名称
-    const keepAliveComponents = asyncRouteStore.keepAliveComponents
-    const currentComName: any = to.matched.find(item => item.name == to.name)?.name
-    if (currentComName && !keepAliveComponents.includes(currentComName) && to.meta?.keepAlive) {
-      // 需要缓存的组件
-      keepAliveComponents.push(currentComName)
-    } else if (!to.meta?.keepAlive || to.name == 'Redirect') {
-      // 不需要缓存的组件
-      const index = asyncRouteStore.keepAliveComponents.findIndex(name => name == currentComName)
-      if (index != -1) {
-        keepAliveComponents.splice(index, 1)
-      }
-    }
-    asyncRouteStore.setKeepAliveComponents(keepAliveComponents)
+
+    // if (isNavigationFailure(failure)) {
+    //   //console.log('failed navigation', failure)
+    // }
+
+    // const asyncRouteStore = useAsyncRouteStoreWidthOut()
+
+    // // 在这里设置需要缓存的组件名称
+    // const keepAliveComponents = asyncRouteStore.keepAliveComponents
+    // const currentComName: any = to.matched.find(item => item.name == to.name)?.name
+    // if (currentComName && !keepAliveComponents.includes(currentComName) && to.meta?.keepAlive) {
+    //   // 需要缓存的组件
+    //   keepAliveComponents.push(currentComName)
+    // } else if (!to.meta?.keepAlive || to.name == 'Redirect') {
+    //   // 不需要缓存的组件
+    //   const index = asyncRouteStore.keepAliveComponents.findIndex(name => name == currentComName)
+    //   if (index != -1) {
+    //     keepAliveComponents.splice(index, 1)
+    //   }
+    // }
+    
+    // asyncRouteStore.setKeepAliveComponents(keepAliveComponents)
+
     const Loading = window['$loading'] || null
     Loading && Loading.finish()
   })

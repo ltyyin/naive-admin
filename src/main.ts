@@ -1,4 +1,4 @@
-import './styles/tailwind.css'
+// import './styles/tailwind.css'
 import { createApp } from 'vue'
 import { setupNaive, setupDirectives } from '@/plugins'
 import App from './App.vue'
