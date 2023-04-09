@@ -4,9 +4,9 @@ import { resolve } from 'path'
 import { wrapperEnv } from './build/utils'
 import { createVitePlugins } from './build/vite/plugin'
 import { OUTPUT_DIR } from './build/constant'
-import { createProxy } from './build/vite/proxy'
 import pkg from './package.json'
 import { format } from 'date-fns'
+
 const { dependencies, devDependencies, name, version } = pkg
 
 const __APP_INFO__ = {
@@ -23,9 +23,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, root)
   const viteEnv = wrapperEnv(env)
 
-  const { VITE_PUBLIC_PATH, VITE_DROP_CONSOLE, VITE_PORT, VITE_GLOB_PROD_MOCK, VITE_PROXY } = viteEnv
-
-  const prodMock = VITE_GLOB_PROD_MOCK
+  const { VITE_PUBLIC_PATH, VITE_DROP_CONSOLE, VITE_PORT } = viteEnv
 
   const isBuild = command === 'build'
 
@@ -45,7 +43,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       ],
       dedupe: ['vue'],
     },
-    plugins: createVitePlugins(viteEnv, isBuild, prodMock),
+    plugins: createVitePlugins(viteEnv, isBuild),
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
@@ -61,7 +59,6 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     server: {
       host: true,
       port: VITE_PORT,
-      // proxy: createProxy(VITE_PROXY),
     },
     optimizeDeps: {
       include: [],

@@ -25,8 +25,7 @@ export default defineComponent({
     const userStore = useUserStore()
     const message = useMessage()
     const dialog = useDialog()
-    const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getCrumbsSetting } =
-      useProjectSetting()
+    const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getCrumbsSetting } = useProjectSetting()
 
     const { username } = userStore?.info || {}
 
@@ -100,6 +99,7 @@ export default defineComponent({
         content: '您确定要退出登录吗',
         positiveText: '确定',
         negativeText: '取消',
+        style: { marginTop: '150px' },
         onPositiveClick: () => {
           userStore.logout().then(() => {
             message.success('成功退出登录')
@@ -121,8 +121,7 @@ export default defineComponent({
 
     // 切换全屏图标
     const toggleFullscreenIcon = () =>
-      (state.fullscreenIcon =
-        document.fullscreenElement !== null ? 'FullscreenExitOutlined' : 'FullscreenOutlined')
+      (state.fullscreenIcon = document.fullscreenElement !== null ? 'FullscreenExitOutlined' : 'FullscreenOutlined')
 
     // 监听全屏切换事件
     document.addEventListener('fullscreenchange', toggleFullscreenIcon)
@@ -187,10 +186,7 @@ export default defineComponent({
 <template>
   <div class="layout-header">
     <!--顶部菜单-->
-    <div
-      class="layout-header-left"
-      v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)"
-    >
+    <div class="layout-header-left" v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)">
       <div class="logo" v-if="navMode === 'horizontal'">
         <img :src="websiteConfig.logo" alt="" />
         <h2 v-show="!collapsed" class="title">{{ websiteConfig.title }}</h2>
@@ -227,11 +223,7 @@ export default defineComponent({
       <n-breadcrumb v-if="crumbsSetting.show">
         <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
           <n-breadcrumb-item v-if="routeItem.meta.title">
-            <n-dropdown
-              v-if="routeItem.children.length"
-              :options="routeItem.children"
-              @select="dropdownSelect"
-            >
+            <n-dropdown v-if="routeItem.children.length" :options="routeItem.children" @select="dropdownSelect">
               <span class="link-text">
                 <component v-if="crumbsSetting.showIcon && routeItem.meta.icon" :is="routeItem.meta.icon" />
                 {{ routeItem.meta.title }}
